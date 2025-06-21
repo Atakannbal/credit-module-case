@@ -1,0 +1,53 @@
+# Java
+/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+/logs/
+*.log
+/.mvn/
+!/.mvn/wrapper/maven-wrapper.jar
+
+# IDEs
+/.idea/
+*.iml
+*.ipr
+*.iws
+*.swp
+*.swo
+*.bak
+*.tmp
+*.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# Misc
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Node (if any)
+node_modules/
+
+# Python (if any)
+__pycache__/
+*.pyc
+
+# GitHub Actions
+.github/workflows/*.secrets.enc
+
+# Custom
+requirements.txt

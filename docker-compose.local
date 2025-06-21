@@ -1,0 +1,15 @@
+services:
+  credit-api-local:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+      target: dev
+    container_name: credit-api-local
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+    volumes:
+      - ./src:/usr/app/src
+      - ./pom.xml:/usr/app/pom.xml
+    restart: unless-stopped
