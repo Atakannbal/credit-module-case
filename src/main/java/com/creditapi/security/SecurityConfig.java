@@ -16,12 +16,13 @@ public class SecurityConfig {
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
-                    "/h2-console/**"
+                    "/h2-console/**",
+                    "/openapi.yaml"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                .ignoringRequestMatchers("/h2-console/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/openapi.yaml")
             )
             .headers(headers -> headers.addHeaderWriter( // for H2 console
                 new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)
