@@ -1,0 +1,24 @@
+#  Build
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
+
+WORKDIR /usr/app
+
+COPY src /usr/app/src
+
+COPY pom.xml /usr/app
+
+RUN mvn -f /usr/app/pom.xml clean package -DskipTests
+
+#  Run
+
+FROM eclipse-temurin:21-jre
+
+WORKDIR /usr/app
+
+COPY --from=builder /usr/app/target/credit-api-*.jar credit-api.jar
+
+RUN adduser --system --no-create-home appuser
+
+USER appuser
+
+ENTRYPOINT ["java", "-jar", "-Xmx384m", "/usr/app/credit-api.jar"]

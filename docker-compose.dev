@@ -1,0 +1,12 @@
+services:
+  credit-api-dev:
+    build: .
+    image: ${DOCKER_USERNAME}/credit-api:dev
+    container_name: credit-api-dev
+    ports:
+      - "8090:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+    restart: unless-stopped
