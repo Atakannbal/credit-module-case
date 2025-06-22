@@ -11,5 +11,7 @@ services:
       - SPRING_PROFILES_ACTIVE=local
     volumes:
       - ./src:/usr/app/src
+      - ./target:/usr/app/target
       - ./pom.xml:/usr/app/pom.xml
+      - ~/.m2:/root/.m2
     restart: unless-stopped

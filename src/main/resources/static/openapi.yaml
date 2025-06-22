@@ -57,13 +57,27 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LoanCreateRequest'
+            example:
+              customerId: "00000000-0000-0000-0000-000000000000"
+              loanAmount: 1200
+              interestRate: 0.2
+              numberOfInstallments: 6
       responses:
         '201':
           description: Loan created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Loan'
+                $ref: '#/components/schemas/LoanResponse'
+              example:
+                id: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                customerId: "00000000-0000-0000-0000-000000000000"
+                loanAmount: 1200
+                interestRate: 0.2
+                numberOfInstallments: 12
+                createDate: "2025-06-22"
+                paymentAmount: 1440
+                firstPaymentDate: "2025-07-01"
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -83,14 +97,17 @@ paths:
           schema:
             type: string
             format: uuid
+          example: "00000000-0000-0000-0000-000000000000"
         - in: query
           name: numberOfInstallments
           schema:
             type: integer
+          example: 6
         - in: query
           name: isPaid
           schema:
             type: boolean
+          example: null
       responses:
         '200':
           description: List of loans
@@ -99,43 +116,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Loan'
+                  $ref: '#/components/schemas/LoanResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-  /loans/{loanId}:
-    get:
-      tags:
-        - Loans
-      summary: Get a loan by ID
-      description: Retrieves a single loan by its unique loanId.
-      parameters:
-        - in: path
-          name: loanId
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: Loan details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Loan'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
   /loans/{loanId}/installments:
@@ -149,7 +136,8 @@ paths:
           name: loanId
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         '200':
           description: List of installments for a loan
@@ -180,7 +168,8 @@ paths:
           name: loanId
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -193,7 +182,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InstallmentPaymentResult'
+                $ref: '#/components/schemas/InstallmentPaymentResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -211,21 +200,22 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-    Customer:
+    LoanCreateRequest:
       type: object
       properties:
-        id:
+        customerId:
           type: string
           format: uuid
-        name:
-          type: string
-        surname:
-          type: string
-        creditLimit:
+        loanAmount:
           type: number
-        usedCreditLimit:
+        interestRate:
           type: number
-    Loan:
+          minimum: 0.1
+          maximum: 0.5
+        numberOfInstallments:
+          type: integer
+          enum: [6, 9, 12, 24]
+    LoanCreateResponse:
       type: object
       properties:
         id:
@@ -243,8 +233,60 @@ components:
         createDate:
           type: string
           format: date
+        paymentAmount:
+          type: number
+        firstPaymentDate:
+          type: string
+          format: date
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        surname:
+          type: string
+        creditLimit:
+          type: number
+        usedCreditLimit:
+          type: number
+      example:
+        id: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        customerId: "00000000-0000-0000-0000-000000000000"
+        loanAmount: 1200
+        interestRate: 0.2
+        numberOfInstallments: 6
+        createDate: "2025-06-22"
+        isPaid: null
+        paymentAmount: 1440
+        firstPaymentDate: "2025-07-01"
+    LoanResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+          format: uuid
+        loanAmount:
+          type: number
+        numberOfInstallments:
+          type: integer
+        interestRate:
+          type: number
+        createDate:
+          type: string
+          format: date
         isPaid:
           type: boolean
+        paymentAmount:
+          type: number
+        firstPaymentDate:
+          type: string
+          format: date
     LoanInstallment:
       type: object
       properties:
@@ -254,7 +296,7 @@ components:
         loanId:
           type: string
           format: uuid
-        amount:
+        loanAmount:
           type: number
         paidAmount:
           type: number
@@ -271,37 +313,43 @@ components:
       properties:
         amount:
           type: number
-    InstallmentPaymentResult:
+          minimum: 0.01
+          exclusiveMinimum: true
+          example: 100
+    InstallmentPaymentResponse:
       type: object
       properties:
-        installmentsPaid:
+        numberOfInstallmentsPaid:
           type: integer
         totalAmountSpent:
           type: number
-        loanPaid:
+        loanFullyPaid:
           type: boolean
-    LoanCreateRequest:
+        paidInstallments:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstallmentPaymentDetail'
+    InstallmentPaymentDetail:
       type: object
       properties:
-        customerId:
+        installmentId:
           type: string
           format: uuid
-        amount:
+        paidAmount:
           type: number
-        interestRate:
-          type: number
-          minimum: 0.1
-          maximum: 0.5
-        numberOfInstallments:
-          type: integer
-          enum: [6, 9, 12, 24]
+        paymentDate:
+          type: string
+          format: date
+    
     AuthRequest:
       type: object
       properties:
         username:
           type: string
+          example: user1
         password:
           type: string
+          example: user1
     AuthResponse:
       type: object
       properties:
@@ -312,8 +360,10 @@ components:
       properties:
         error:
           type: string
+          example: Bad Request
         message:
           type: string
+          example: amount must be greater than 0
   responses:
     BadRequest:
       description: Bad request
@@ -321,28 +371,43 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: Bad Request
+            message: amount must be greater than 0
     Unauthorized:
       description: Unauthorized
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: Unauthorized
+            message: Full authentication is required to access this resource
     Forbidden:
       description: Forbidden
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: Forbidden
+            message: Access is denied
     NotFound:
       description: Not found
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: Not Found
+            message: Loan not found
     InternalServerError:
       description: Internal server error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: Internal Server Error
+            message: An unexpected error occurred
 

@@ -21,6 +21,7 @@ jobs:
     env:
       SPRING_DATASOURCE_USERNAME: ${{ github.ref == 'refs/heads/main' && secrets.CREDIT_DB_USERNAME || secrets.CREDIT_DB_USERNAME_DEV }}
       SPRING_DATASOURCE_PASSWORD: ${{ github.ref == 'refs/heads/main' && secrets.CREDIT_DB_PASSWORD || secrets.CREDIT_DB_PASSWORD_DEV }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -57,6 +58,7 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         SPRING_DATASOURCE_USERNAME: ${{ github.ref == 'refs/heads/main' && secrets.CREDIT_DB_USERNAME || secrets.CREDIT_DB_USERNAME_DEV }}
         SPRING_DATASOURCE_PASSWORD: ${{ github.ref == 'refs/heads/main' && secrets.CREDIT_DB_PASSWORD || secrets.CREDIT_DB_PASSWORD_DEV }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
