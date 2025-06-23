@@ -1,8 +1,9 @@
 TODO
 
 IN-PROGRESS
-[] Initial deploy
 
 DONE
 [x] Create github repository 
 [x] Initial commit
+[x] Initial deploy
+[x] Define the API contract

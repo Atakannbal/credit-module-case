@@ -2,9 +2,8 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS builder
 WORKDIR /usr/app
 COPY pom.xml /usr/app
-COPY src /usr/app/src
-
 RUN mvn dependency:go-offline
+COPY src /usr/app/src
 
 # Run
 FROM maven:3.9.6-eclipse-temurin-21 AS dev
