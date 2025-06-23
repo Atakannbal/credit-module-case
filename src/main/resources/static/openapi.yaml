@@ -358,12 +358,22 @@ components:
     ErrorResponse:
       type: object
       properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: '2025-06-23T18:16:12.812548723Z'
+        status:
+          type: integer
+          example: 400
         error:
           type: string
           example: Bad Request
         message:
           type: string
           example: amount must be greater than 0
+        path:
+          type: string
+          example: /loans
   responses:
     BadRequest:
       description: Bad request
@@ -372,8 +382,11 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
+            timestamp: '2025-06-23T18:16:12.812548723Z'
+            status: 400
             error: Bad Request
             message: amount must be greater than 0
+            path: /loans
     Unauthorized:
       description: Unauthorized
       content:
@@ -381,8 +394,11 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
+            timestamp: '2025-06-23T18:16:12.812548723Z'
+            status: 401
             error: Unauthorized
             message: Full authentication is required to access this resource
+            path: /loans
     Forbidden:
       description: Forbidden
       content:
@@ -390,8 +406,11 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
+            timestamp: '2025-06-23T18:16:12.812548723Z'
+            status: 403
             error: Forbidden
             message: Access is denied
+            path: /loans
     NotFound:
       description: Not found
       content:
@@ -399,8 +418,11 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
+            timestamp: '2025-06-23T18:16:12.812548723Z'
+            status: 404
             error: Not Found
             message: Loan not found
+            path: /loans/123
     InternalServerError:
       description: Internal server error
       content:
@@ -408,6 +430,9 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
+            timestamp: '2025-06-23T18:16:12.812548723Z'
+            status: 500
             error: Internal Server Error
             message: An unexpected error occurred
+            path: /loans
 
