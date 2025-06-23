@@ -63,7 +63,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
-        envs: DOCKER_USERNAME,SPRING_DATASOURCE_PASSWORD,SPRING_DATASOURCE_USERNAME
+        envs: DOCKER_USERNAME,SPRING_DATASOURCE_PASSWORD,SPRING_DATASOURCE_USERNAME,JWT_SECRET
         script: |
           docker-compose -f docker-compose.${{ github.ref == 'refs/heads/main' && 'prod' || 'dev'}} pull
           docker-compose -f docker-compose.${{ github.ref == 'refs/heads/main' && 'prod' || 'dev'}} up -d
