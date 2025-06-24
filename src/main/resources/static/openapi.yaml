@@ -1,7 +1,3 @@
-# This file is a copy of your OpenAPI contract for serving via Spring Boot static resources.
-# It enables Swagger UI to fetch the spec at /openapi.yaml.
-# Keep this in sync with your main openapi.yaml in the project root.
-
 openapi: 3.0.3
 info:
   title: Credit API
@@ -68,7 +64,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoanResponse'
+                $ref: '#/components/schemas/LoanCreateResponse'
               example:
                 id: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
                 customerId: "00000000-0000-0000-0000-000000000000"
@@ -116,7 +112,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/LoanResponse'
+                  $ref: '#/components/schemas/LoanListResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -146,7 +142,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/LoanInstallment'
+                  $ref: '#/components/schemas/LoanListInstallmentsResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -175,14 +171,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InstallmentPaymentRequest'
+              $ref: '#/components/schemas/LoanPaymentRequest'
       responses:
         '200':
           description: Payment result
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InstallmentPaymentResponse'
+                $ref: '#/components/schemas/LoanPaymentResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -238,31 +234,7 @@ components:
         firstPaymentDate:
           type: string
           format: date
-    Customer:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        surname:
-          type: string
-        creditLimit:
-          type: number
-        usedCreditLimit:
-          type: number
-      example:
-        id: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-        customerId: "00000000-0000-0000-0000-000000000000"
-        loanAmount: 1200
-        interestRate: 0.2
-        numberOfInstallments: 6
-        createDate: "2025-06-22"
-        isPaid: null
-        paymentAmount: 1440
-        firstPaymentDate: "2025-07-01"
-    LoanResponse:
+    LoanListResponse:
       type: object
       properties:
         id:
@@ -287,7 +259,7 @@ components:
         firstPaymentDate:
           type: string
           format: date
-    LoanInstallment:
+    LoanListInstallmentsResponse:
       type: object
       properties:
         id:
@@ -308,7 +280,7 @@ components:
           format: date
         isPaid:
           type: boolean
-    InstallmentPaymentRequest:
+    LoanPaymentRequest:
       type: object
       properties:
         amount:
@@ -316,7 +288,7 @@ components:
           minimum: 0.01
           exclusiveMinimum: true
           example: 100
-    InstallmentPaymentResponse:
+    LoanPaymentResponse:
       type: object
       properties:
         numberOfInstallmentsPaid:
@@ -353,8 +325,15 @@ components:
     AuthResponse:
       type: object
       properties:
+        customerId:
+          type: string
+          format: uuid
+          example: "00000000-0000-0000-0000-000001"
         token:
           type: string
+        role: 
+          type: string
+          example: CUSTOMER
     ErrorResponse:
       type: object
       properties:
@@ -435,4 +414,3 @@ components:
             error: Internal Server Error
             message: An unexpected error occurred
             path: /loans
-
