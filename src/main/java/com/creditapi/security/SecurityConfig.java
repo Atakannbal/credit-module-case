@@ -36,7 +36,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable()) // CSRF protection is disabled as the application uses stateless JWT authentication, and CSRF tokens are unnecessary.
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/auth/login", "/h2-console/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/openapi.yaml").permitAll()
