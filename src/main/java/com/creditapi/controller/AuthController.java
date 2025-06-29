@@ -8,7 +8,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,14 +25,17 @@ public class AuthController {
     
     private static final long EXPIRATION = 1000 * 60 * 60 * 24;
 
-    @Autowired
-    private AppUserRepository userRepo;
-
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+    private final AppUserRepository userRepo;    
+    private final BCryptPasswordEncoder encoder;
 
     @Value("${jwt.secret}")
     private String SECRET;
+
+
+    public AuthController(AppUserRepository userRepo, BCryptPasswordEncoder encoder) {
+        this.userRepo = userRepo;
+        this.encoder = encoder;
+    }
 
     @PostMapping("/login")
     public Map<String, String> login(@Valid @RequestBody LoginRequestDTO loginRequest) {
