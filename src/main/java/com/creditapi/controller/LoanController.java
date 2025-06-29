@@ -23,11 +23,9 @@ import java.util.UUID;
 @RequestMapping("/loans")
 public class LoanController {
     private final LoanService loanService;
-    private final LoanMapper loanMapper;
 
     public LoanController(LoanService loanService, LoanMapper loanMapper) {
         this.loanService = loanService;
-        this.loanMapper = loanMapper;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
