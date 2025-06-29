@@ -17,7 +17,6 @@ import com.creditapi.dto.PayInstallmentRequestDTO;
 import com.creditapi.dto.PayInstallmentResponseDTO;
 import com.creditapi.mapper.LoanMapper;
 import com.creditapi.dto.LoanInstallmentDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +37,6 @@ public class LoanServiceImpl implements LoanService {
     private final LoanMapper loanMapper;
     private final LoanInstallmentRepository loanInstallmentRepository;
 
-    @Autowired
     public LoanServiceImpl(CustomerRepository customerRepository, LoanRepository loanRepository, LoanMapper loanMapper, LoanInstallmentRepository loanInstallmentRepository) {
         this.customerRepository = customerRepository;
         this.loanRepository = loanRepository;
